@@ -49,4 +49,9 @@ export default createGlobalStyle`
         font-weight: bold;
     }
 //-------RESET-----------------------//
+
+    .root {
+        min-height: 100vh;
+        background-color: #e6f6d1;
+    }
 `;
