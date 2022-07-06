@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import UserContext from "./contexts/UserContext";
+import Footer from "./Footer/Footer";
 import Home from "./Home/Home";
 import SignIn from "./SignIn/SignIn";
 import SignUp from "./SignUp/SignUp";
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
+        <Footer />
       </UserContext.Provider>
     </BrowserRouter>
   );
