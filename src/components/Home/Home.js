@@ -1,15 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { setLocal } from "../utils/localStorageFunctions";
+import UserContext from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [productList, setProductList] = useState([]);
   const [cart, setCart] = useState([]);
+  const { userInfo } = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // const API_URL = process.env.REACT_APP_API_URL;
-    const API_URL = "http://localhost:5000";
+    const API_URL = process.env.REACT_APP_API_URL;
+
     async function fetchData() {
       try {
         const { data } = await axios.get(`${API_URL}/products`);
@@ -22,6 +26,10 @@ export default function Home() {
   });
 
   function addToCart(name, price, image, id) {
+    if (!userInfo) {
+      alert("Você precisa estar conectado para adicionar itens ao carrinho!");
+      navigate("/sign-in");
+    }
     setCart([...cart, { name, price, image, _id: id }]);
     setLocal("cart", cart);
   }
