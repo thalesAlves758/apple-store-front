@@ -5,7 +5,7 @@ const Button = styled.button`
   border: 1px solid #dbdbdb;
   border-radius: 5px;
   font-size: 18px;
-  background-color: #85c940;
+  background-color: #2cb566;
   color: #ffffff;
   font-weight: 700;
   display: flex;
@@ -19,7 +19,12 @@ const Button = styled.button`
   }
 
   :disabled {
-    filter: brightness(1.1);
+    opacity: 0.5;
+
+    :hover {
+      cursor: default;
+      filter: none;
+    }
   }
 `;
 
