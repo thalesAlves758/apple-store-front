@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { setLocal } from "../utils/localStorageFunctions";
 
 export default function Home() {
   const [productList, setProductList] = useState([]);
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    const API_URL = process.env.REACT_APP_API_URL;
-
+    // const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = "http://localhost:5000";
     async function fetchData() {
       try {
         const { data } = await axios.get(`${API_URL}/products`);
@@ -19,6 +21,11 @@ export default function Home() {
     fetchData();
   });
 
+  function addToCart(name, price, image, id) {
+    setCart([...cart, { name, price, image, _id: id }]);
+    setLocal("cart", cart);
+  }
+
   function genProductList() {
     if (productList.length > 0) {
       return (
@@ -26,10 +33,12 @@ export default function Home() {
           <List>
             {productList.map((product, index) => (
               <Product
-                key={product._id}
+                key={index}
                 name={product.name}
                 price={product.price}
                 image={product.image}
+                id={product._id}
+                addToCart={addToCart}
               />
             ))}
           </List>
@@ -42,7 +51,7 @@ export default function Home() {
   return <>{genProductList()}</>;
 }
 
-function Product({ name, price, image }) {
+function Product({ name, price, image, id, addToCart }) {
   const priceToDisplay = price.toFixed(2).toString().replace(".", ",");
 
   return (
@@ -50,7 +59,7 @@ function Product({ name, price, image }) {
       <img src={image} alt={name} />
       <h1>{name}</h1>
       <h2>R$ {priceToDisplay}</h2>
-      <Button>
+      <Button onClick={() => addToCart(name, price, image, id)}>
         <p>Adicionar ao carrinho</p>
       </Button>
     </ProductBox>
@@ -100,7 +109,7 @@ const ProductBox = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: #2cb567;
+  background-color: #85c940;
   height: 24px;
   border: none;
   color: white;
