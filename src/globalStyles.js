@@ -52,4 +52,13 @@ export default createGlobalStyle`
         box-sizing: border-box;
     }
 //-------RESET-----------------------//
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .root {
+        min-height: 100vh;
+        background-color: #e6f6d1;
+    }
 `;
