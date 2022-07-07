@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import logo from "../../assets/img/logo.png";
 
 export default function Header() {
   const location = useLocation().pathname;
@@ -13,6 +14,7 @@ export default function Header() {
           <SearchBar>
             <Input placeholder="Pesquisar" type="text" />
             <ion-icon name="search-outline"></ion-icon>
+            <Logo src={logo} />
           </SearchBar>
         </Container>
       );
@@ -26,6 +28,7 @@ const Container = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,7 +53,7 @@ const SearchBar = styled.div`
 `;
 
 const Input = styled.input`
-  width: 100%;
+  width: 88%;
   height: 100%;
   background-color: #fafafa;
   border: 1px solid #dbdbdb;
@@ -59,4 +62,12 @@ const Input = styled.input`
   outline: none;
   padding-left: 40px;
   font-size: 16px;
+`;
+
+const Logo = styled.img`
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  height: 40px;
+  width: 40px;
 `;
