@@ -48,5 +48,8 @@ export default createGlobalStyle`
     strong {
         font-weight: bold;
     }
+    * {
+        box-sizing: border-box;
+    }
 //-------RESET-----------------------//
 `;
