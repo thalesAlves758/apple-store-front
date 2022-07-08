@@ -55,4 +55,13 @@ export default createGlobalStyle`
         font-family: 'Roboto', sans-serif;
     }
 //-------RESET-----------------------//
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .root {
+        min-height: 100vh;
+        background-color: #e6f6d1;
+    }
 `;

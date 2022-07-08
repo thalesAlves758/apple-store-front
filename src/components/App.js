@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import UserContext from "./contexts/UserContext";
+import Header from "./Header/Header";
+import Footer from "./Footer/Footer";
 import Home from "./Home/Home";
 import SignIn from "./SignIn/SignIn";
 import SignUp from "./SignUp/SignUp";
@@ -14,6 +16,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <UserContext.Provider value={{ userInfo, setUserInfo }}>
+        <Header />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/sign-in" element={<SignIn />} />
@@ -22,6 +25,7 @@ export default function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
+        <Footer />
       </UserContext.Provider>
     </BrowserRouter>
   );
