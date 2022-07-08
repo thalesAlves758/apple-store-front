@@ -23,7 +23,7 @@ export default function Home() {
       }
     }
     fetchData();
-  });
+  }, []);
 
   function addToCart(name, price, image, id) {
     if (!userInfo) {
