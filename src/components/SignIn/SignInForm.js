@@ -10,9 +10,12 @@ import UserContext from "../contexts/UserContext";
 import httpStatus from "../../utils/httpStatus";
 
 import { ThreeDots } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
 
 export default function SignInForm() {
-  const { setUser } = useContext(UserContext);
+  const { setUserInfo } = useContext(UserContext);
+
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [body, setBody] = useState({
@@ -32,7 +35,8 @@ export default function SignInForm() {
     axios
       .post(`${API_URL}/sign-in`, body)
       .then(({ data }) => {
-        setUser(data);
+        setUserInfo(data);
+        navigate("/");
       })
       .catch((error) => {
         if (error.response) {
@@ -40,6 +44,13 @@ export default function SignInForm() {
 
           if (status === httpStatus.UNAUTHORIZED) {
             alert("E-mail ou senha inválidos. Tente novamente!");
+            return;
+          }
+
+          if (status === httpStatus.INTERNAL_SERVER_ERROR) {
+            alert(
+              "Não foi possível realizar esta operação no momento. Tente novamente mais tarde!"
+            );
             return;
           }
         }
