@@ -1,7 +1,7 @@
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import styled from "styled-components";
 import UserContext from "../contexts/UserContext";
-import { Link, useNavigate } from "react-router-dom";
 
 export default function Settings() {
   const { userInfo, setUserInfo } = useContext(UserContext);
@@ -38,10 +38,10 @@ export default function Settings() {
       <Container>
         <Title>Olá, {userInfo.name}</Title>
         <ButtonsContainer>
-          <Button>Seus pedidos</Button>
+          <Link to="/cart">
+            <Button>Carrinho</Button>
+          </Link>
           <Button onClick={logOut}>Sair</Button>
-          <Button>Sua conta</Button>
-          <Button>Sua lista de desejos</Button>
         </ButtonsContainer>
       </Container>
     );
@@ -99,7 +99,7 @@ const ButtonsContainer = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: #85c940;
+  background-color: #2cb566;
   height: 24px;
   border: none;
   color: white;
