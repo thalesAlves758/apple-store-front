@@ -50,6 +50,9 @@ export default function Settings() {
 }
 
 const Container = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
   margin-top: 70px;
   margin-bottom: 60px;
   width: 100%;
