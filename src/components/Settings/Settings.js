@@ -74,7 +74,8 @@ const WelcomeMessage = styled.div`
   align-items: center;
 
   p {
-    font-size: 20px;
+    font-size: 18px;
+    margin-bottom: 4px;
   }
 
   h1 {
