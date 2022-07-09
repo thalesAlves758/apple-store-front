@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { setLocal } from "../utils/localStorageFunctions";
+import { getLocal, setLocal } from "../utils/localStorageFunctions";
 import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [productList, setProductList] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(getLocal("cart") || []);
   const { userInfo } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -19,7 +19,9 @@ export default function Home() {
         const { data } = await axios.get(`${API_URL}/products`);
         setProductList(data);
       } catch (error) {
-        console.log(error.response.data);
+        if (error.response) {
+          console.log(error.response.data);
+        }
       }
     }
     fetchData();
@@ -30,8 +32,11 @@ export default function Home() {
       alert("Você precisa estar conectado para adicionar itens ao carrinho!");
       navigate("/sign-in");
     }
-    setCart([...cart, { name, price, image, _id: id }]);
-    setLocal("cart", cart);
+
+    const newCart = [...cart, { name, price, image, _id: id }];
+
+    setCart(newCart);
+    setLocal("cart", newCart);
   }
 
   function genProductList() {

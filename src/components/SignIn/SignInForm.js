@@ -36,9 +36,12 @@ export default function SignInForm() {
       .post(`${API_URL}/sign-in`, body)
       .then(({ data }) => {
         setUserInfo(data);
+        setLoading(false);
         navigate("/");
       })
       .catch((error) => {
+        setLoading(false);
+
         if (error.response) {
           const { status } = error.response;
 
@@ -54,8 +57,7 @@ export default function SignInForm() {
             return;
           }
         }
-      })
-      .finally(() => setLoading(false));
+      });
   }
 
   function handleSubmit(event) {
