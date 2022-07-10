@@ -64,11 +64,11 @@ export default function Cart() {
       alert("Você precisa estar conectado para visualizar o carrinho!");
       navigate("/sign-in");
     }
-  }, []);
+  }, []); // eslint-disable-line
 
   useEffect(() => {
     setCartTotal(getCartTotal());
-  }, [cartItems]);
+  }, [cartItems]); // eslint-disable-line
 
   return (
     <Container>

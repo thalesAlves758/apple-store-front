@@ -5,6 +5,7 @@ import { getLocal, setLocal } from "../utils/localStorageFunctions";
 import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import toBrl from "../utils/toBrl";
+import Loader from "../layout/Loader";
 
 export default function Home() {
   const [productList, setProductList] = useState([]);
@@ -60,7 +61,7 @@ export default function Home() {
       );
     }
 
-    return <>Loading</>;
+    return <Loader />;
   }
   return <>{genProductList()}</>;
 }
