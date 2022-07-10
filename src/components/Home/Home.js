@@ -4,6 +4,7 @@ import axios from "axios";
 import { getLocal, setLocal } from "../utils/localStorageFunctions";
 import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import toBrl from "../utils/toBrl";
 
 export default function Home() {
   const [productList, setProductList] = useState([]);
@@ -65,13 +66,11 @@ export default function Home() {
 }
 
 function Product({ name, price, image, id, addToCart }) {
-  const priceToDisplay = price.toFixed(2).toString().replace(".", ",");
-
   return (
     <ProductBox>
       <img src={image} alt={name} />
       <h1>{name}</h1>
-      <h2>R$ {priceToDisplay}</h2>
+      <h2>{toBrl(price)}</h2>
       <Button onClick={() => addToCart(name, price, image, id)}>
         <p>Adicionar ao carrinho</p>
       </Button>
@@ -98,7 +97,7 @@ const List = styled.div`
 
 const ProductBox = styled.div`
   width: 48%;
-  height: 204px;
+  height: 220px;
   background-color: white;
   margin-bottom: 20px;
   box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.1);
@@ -117,7 +116,15 @@ const ProductBox = styled.div`
   }
 
   h1 {
-    margin-bottom: 6px;
+    font-weight: bold;
+    color: #003800;
+  }
+
+  h2 {
+    font-weight: bold;
+    position: absolute;
+    bottom: 38px;
+    left: 8px;
   }
 `;
 
@@ -129,9 +136,11 @@ const Button = styled.button`
   border-radius: 6px;
   text-align: center;
   text-decoration: none;
+
   position: absolute;
   bottom: 6px;
-  left: 12px;
+  left: 6px;
+  font-weight: bold;
 
   :hover {
     cursor: pointer;
