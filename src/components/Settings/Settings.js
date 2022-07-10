@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import styled from "styled-components";
 import UserContext from "../contexts/UserContext";
+import axios from "axios";
+import httpStatus from "../../utils/httpStatus";
 
 export default function Settings() {
   const { userInfo, setUserInfo } = useContext(UserContext);
@@ -11,8 +13,37 @@ export default function Settings() {
     if (!window.confirm("Você realmente deseja sair?")) {
       return;
     }
-    setUserInfo(null);
-    navigate("/");
+
+    const API_URL = process.env.REACT_APP_API_URL;
+
+    axios
+      .post(
+        `${API_URL}/sign-out`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${userInfo.token || ""}`,
+          },
+        }
+      )
+      .then(() => {
+        setUserInfo(null);
+        navigate("/");
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === httpStatus.UNAUTHORIZED) {
+            setUserInfo(null);
+            navigate("/");
+            return;
+          }
+
+          if (error.response.status === httpStatus.INTERNAL_SERVER_ERROR) {
+            alert("Não foi possível realizar esta operação");
+            return;
+          }
+        }
+      });
   }
 
   function genSettingsPage() {
