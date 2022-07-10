@@ -8,6 +8,7 @@ import SignIn from "./SignIn/SignIn";
 import SignUp from "./SignUp/SignUp";
 import Cart from "./Cart/Cart";
 import Checkout from "./Checkout/Checkout";
+import OrderOverview from "./OrderOverview/OrderOverview";
 import Settings from "./Settings/Settings";
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/orderOverview" element={<OrderOverview />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
         <Footer />

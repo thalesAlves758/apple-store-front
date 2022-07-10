@@ -49,8 +49,14 @@ export default function Checkout() {
     try {
       await axios.post(`${API_URL}/order`, body, config);
       deleteLocal("cart");
-      console.log("foi!");
-      navigate("/");
+      navigate("/orderOverview", {
+        state: {
+          adress,
+          cardNumber: cardNumber.slice(-4),
+          items: cartItems,
+          total: cartTotal,
+        },
+      });
     } catch (error) {
       setLoading(false);
       alert("Erro ao registrar pedido!");
