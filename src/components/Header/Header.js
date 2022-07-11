@@ -21,7 +21,6 @@ export default function Header() {
   }
 
   useEffect(() => {
-    console.log(searchText);
     const products = productList.filter((product) => {
       return getNormalizedText(product.name).includes(
         getNormalizedText(searchText)
