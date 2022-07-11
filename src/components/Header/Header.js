@@ -1,18 +1,47 @@
+import { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../assets/img/logo.png";
+import ProductsContext from "../contexts/ProductsContext";
 
 export default function Header() {
   const location = useLocation().pathname;
   const render =
     location !== "/sign-up" && location !== "/sign-in" ? true : false;
 
+  const { productList, setShowedProducts } = useContext(ProductsContext);
+
+  const [searchText, setSearchText] = useState("");
+
+  function getNormalizedText(text) {
+    return text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  useEffect(() => {
+    console.log(searchText);
+    const products = productList.filter((product) => {
+      return getNormalizedText(product.name).includes(
+        getNormalizedText(searchText)
+      );
+    });
+
+    setShowedProducts(products);
+  }, [searchText]);
+
   function genHeader() {
     if (render) {
       return (
         <Container>
           <SearchBar>
-            <Input placeholder="Pesquisar" type="text" />
+            <Input
+              onChange={(event) => setSearchText(event.target.value)}
+              placeholder="Pesquisar"
+              type="search"
+              value={searchText}
+            />
             <ion-icon name="search-outline"></ion-icon>
             <Logo src={logo} />
           </SearchBar>

@@ -4,9 +4,11 @@ import axios from "axios";
 import { getLocal, setLocal } from "../utils/localStorageFunctions";
 import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import ProductsContext from "../contexts/ProductsContext";
 
 export default function Home() {
-  const [productList, setProductList] = useState([]);
+  const { setProductList, showedProducts, setShowedProducts } =
+    useContext(ProductsContext);
   const [cart, setCart] = useState(getLocal("cart") || []);
   const { userInfo } = useContext(UserContext);
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ export default function Home() {
       try {
         const { data } = await axios.get(`${API_URL}/products`);
         setProductList(data);
+        setShowedProducts(data);
       } catch (error) {
         if (error.response) {
           console.log(error.response.data);
@@ -40,11 +43,11 @@ export default function Home() {
   }
 
   function genProductList() {
-    if (productList.length > 0) {
+    if (showedProducts.length > 0) {
       return (
         <Container>
           <List>
-            {productList.map((product, index) => (
+            {showedProducts.map((product, index) => (
               <Product
                 key={index}
                 name={product.name}
