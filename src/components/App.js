@@ -12,11 +12,14 @@ import Checkout from "./Checkout/Checkout";
 import OrderOverview from "./OrderOverview/OrderOverview";
 import Settings from "./Settings/Settings";
 import ProductsContext from "./contexts/ProductsContext";
+import CartContext from "./contexts/CartContext";
+import { getLocal } from "./utils/localStorageFunctions";
 
 export default function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [productList, setProductList] = useState([]);
   const [showedProducts, setShowedProducts] = useState([]);
+  const [cartGlobal, setCartGlobal] = useState(getLocal("cart") || []);
 
   return (
     <BrowserRouter>
@@ -29,17 +32,19 @@ export default function App() {
             setShowedProducts,
           }}
         >
-          <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/orderOverview" element={<OrderOverview />} />
-            <Route path="/settings" element={<Settings />} />
-          </Routes>
-          <Footer />
+          <CartContext.Provider value={{ cartGlobal, setCartGlobal }}>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/orderOverview" element={<OrderOverview />} />
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
+            <Footer />
+          </CartContext.Provider>
         </ProductsContext.Provider>
       </UserContext.Provider>
     </BrowserRouter>

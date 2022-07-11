@@ -28,7 +28,7 @@ export default function Header() {
     });
 
     setShowedProducts(products);
-  }, [searchText]);
+  }, [searchText]); //eslint-disable-line
 
   function genHeader() {
     if (render) {
