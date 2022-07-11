@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 
 import UserContext from "./contexts/UserContext";
 import Header from "./Header/Header";
@@ -12,41 +11,12 @@ import Cart from "./Cart/Cart";
 import Checkout from "./Checkout/Checkout";
 import OrderOverview from "./OrderOverview/OrderOverview";
 import Settings from "./Settings/Settings";
-import { setNewInterval } from "./utils/intervals";
 import ProductsContext from "./contexts/ProductsContext";
 
 export default function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [productList, setProductList] = useState([]);
   const [showedProducts, setShowedProducts] = useState([]);
-
-  useEffect(() => {
-    const THIRTY_SECONDS = 30 * 1000;
-
-    setNewInterval(() => {
-      if (userInfo) {
-        const API_URL = process.env.REACT_APP_API_URL;
-
-        const { token } = userInfo;
-
-        axios
-          .post(
-            `${API_URL}/status`,
-            {},
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
-          .catch((error) => {
-            if (error.response) {
-              console.log(error.response.data);
-            }
-          });
-      }
-    }, THIRTY_SECONDS);
-  }, [userInfo]);
 
   return (
     <BrowserRouter>

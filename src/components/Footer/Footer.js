@@ -1,10 +1,14 @@
+import { useContext } from "react";
 import { useLocation, Link } from "react-router-dom";
 import styled from "styled-components";
+import UserContext from "../contexts/UserContext";
 
 export default function Footer() {
   const location = useLocation().pathname;
   const render =
     location !== "/sign-up" && location !== "/sign-in" ? true : false;
+
+  const { userInfo } = useContext(UserContext);
 
   function genFooter() {
     if (render) {
@@ -15,6 +19,7 @@ export default function Footer() {
           </Link>
           <Link to="/cart">
             <ion-icon name="cart-outline"></ion-icon>
+            <CartQuantity>{userInfo ? userInfo.cartLenght : "0"}</CartQuantity>
           </Link>
           <Link to="/settings">
             <ion-icon name="person-outline"></ion-icon>
@@ -48,4 +53,11 @@ const Container = styled.div`
     text-decoration: none;
     color: inherit;
   }
+`;
+
+const CartQuantity = styled.div`
+  position: fixed;
+  bottom: 40px;
+  left: calc(50% - 2px);
+  z-index: 2;
 `;

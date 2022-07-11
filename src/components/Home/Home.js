@@ -5,12 +5,14 @@ import { getLocal, setLocal } from "../utils/localStorageFunctions";
 import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import ProductsContext from "../contexts/ProductsContext";
+import toBrl from "../utils/toBrl";
+import Loader from "../layout/Loader";
 
 export default function Home() {
   const { setProductList, showedProducts, setShowedProducts } =
     useContext(ProductsContext);
   const [cart, setCart] = useState(getLocal("cart") || []);
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, setUserInfo } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,12 +36,13 @@ export default function Home() {
     if (!userInfo) {
       alert("Você precisa estar conectado para adicionar itens ao carrinho!");
       navigate("/sign-in");
+    } else {
+      const newCart = [...cart, { name, price, image, _id: id }];
+
+      setCart(newCart);
+      setLocal("cart", newCart);
+      setUserInfo({ ...userInfo, cartLenght: newCart.length });
     }
-
-    const newCart = [...cart, { name, price, image, _id: id }];
-
-    setCart(newCart);
-    setLocal("cart", newCart);
   }
 
   function genProductList() {
@@ -62,19 +65,17 @@ export default function Home() {
       );
     }
 
-    return <>Loading</>;
+    return <Loader />;
   }
   return <>{genProductList()}</>;
 }
 
 function Product({ name, price, image, id, addToCart }) {
-  const priceToDisplay = price.toFixed(2).toString().replace(".", ",");
-
   return (
     <ProductBox>
       <img src={image} alt={name} />
       <h1>{name}</h1>
-      <h2>R$ {priceToDisplay}</h2>
+      <h2>{toBrl(price)}</h2>
       <Button onClick={() => addToCart(name, price, image, id)}>
         <p>Adicionar ao carrinho</p>
       </Button>
@@ -101,7 +102,7 @@ const List = styled.div`
 
 const ProductBox = styled.div`
   width: 48%;
-  height: 204px;
+  height: 220px;
   background-color: white;
   margin-bottom: 20px;
   box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.1);
@@ -120,7 +121,15 @@ const ProductBox = styled.div`
   }
 
   h1 {
-    margin-bottom: 6px;
+    font-weight: bold;
+    color: #003800;
+  }
+
+  h2 {
+    font-weight: bold;
+    position: absolute;
+    bottom: 38px;
+    left: 8px;
   }
 `;
 
@@ -132,9 +141,11 @@ const Button = styled.button`
   border-radius: 6px;
   text-align: center;
   text-decoration: none;
+
   position: absolute;
   bottom: 6px;
-  left: 12px;
+  left: 6px;
+  font-weight: bold;
 
   :hover {
     cursor: pointer;
