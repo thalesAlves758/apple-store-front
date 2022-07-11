@@ -3,34 +3,52 @@ import styled from "styled-components";
 import axios from "axios";
 import { getLocal, setLocal } from "../utils/localStorageFunctions";
 import UserContext from "../contexts/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductsContext from "../contexts/ProductsContext";
 import toBrl from "../utils/toBrl";
 import Loader from "../layout/Loader";
+import normalizeText from "../utils/normalizeText";
+import RenderIf from "../utils/RenderIf";
 
 export default function Home() {
-  const { setProductList, showedProducts, setShowedProducts } =
+  const { productList, setProductList, showedProducts, setShowedProducts } =
     useContext(ProductsContext);
   const [cart, setCart] = useState(getLocal("cart") || []);
   const { userInfo, setUserInfo } = useContext(UserContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const API_URL = process.env.REACT_APP_API_URL;
+  const [searchParams] = useSearchParams();
+  const searchedText = searchParams.get("search");
 
-    async function fetchData() {
-      try {
-        const { data } = await axios.get(`${API_URL}/products`);
-        setProductList(data);
-        setShowedProducts(data);
-      } catch (error) {
-        if (error.response) {
-          console.log(error.response.data);
+  function renderProducts(products) {
+    setShowedProducts(
+      products.filter((product) => {
+        return normalizeText(product.name).includes(searchedText || "");
+      })
+    );
+  }
+
+  useEffect(() => {
+    if (productList.length === 0) {
+      const API_URL = process.env.REACT_APP_API_URL;
+
+      async function fetchData() {
+        try {
+          const { data } = await axios.get(`${API_URL}/products`);
+          setProductList(data);
+          renderProducts(data);
+        } catch (error) {
+          if (error.response) {
+            console.log(error.response.data);
+          }
         }
       }
+      fetchData();
+      return;
     }
-    fetchData();
-  }, []);
+
+    renderProducts(productList);
+  }, [searchedText]); /* eslint-disable-line */
 
   function addToCart(name, price, image, id) {
     if (!userInfo) {
@@ -46,7 +64,7 @@ export default function Home() {
   }
 
   function genProductList() {
-    if (showedProducts.length > 0) {
+    if (productList.length > 0) {
       return (
         <Container>
           <List>
@@ -67,7 +85,15 @@ export default function Home() {
 
     return <Loader />;
   }
-  return <>{genProductList()}</>;
+  return (
+    <>
+      <RenderIf isTrue={showedProducts.length > 0}>{genProductList()}</RenderIf>
+
+      <RenderIf isTrue={showedProducts.length === 0}>
+        <NoProductsMessage>Nenhum produto encontrado</NoProductsMessage>
+      </RenderIf>
+    </>
+  );
 }
 
 function Product({ name, price, image, id, addToCart }) {
@@ -82,6 +108,20 @@ function Product({ name, price, image, id, addToCart }) {
     </ProductBox>
   );
 }
+
+const NoProductsMessage = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  padding: 0 25px;
+  color: #003800;
+`;
 
 const Container = styled.div`
   display: flex;
