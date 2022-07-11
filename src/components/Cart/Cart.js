@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 
 import UserContext from "../contexts/UserContext";
+import CartContext from "../contexts/CartContext";
 import Button from "../layout/Button";
 import toBrl from "../utils/toBrl";
 import RenderIf from "../utils/RenderIf";
@@ -10,7 +11,8 @@ import CartItem from "./CartItem";
 import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
-  const { userInfo, setUserInfo } = useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
+  const { setCartGlobal } = useContext(CartContext);
 
   const navigate = useNavigate();
 
@@ -33,9 +35,11 @@ export default function Cart() {
       (_, currentIndex) => currentIndex !== index
     );
 
-    setCartItems(newCartItems);
+    // setCartItems(newCartItems);
     setLocal(userInfo.email, newCartItems);
-    setUserInfo({ ...userInfo, cartLenght: userInfo.cartLenght - 1 });
+    // setUserInfo({ ...userInfo, cartLenght: userInfo.cartLenght - 1 });
+    // setLocal(`${userInfo.email}`, newCartItems);
+    setCartGlobal(newCartItems);
   }
 
   function renderCartItems() {

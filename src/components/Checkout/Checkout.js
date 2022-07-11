@@ -9,6 +9,7 @@ import { ThreeDots } from "react-loader-spinner";
 import UserContext from "../contexts/UserContext";
 import { deleteLocal } from "../utils/localStorageFunctions";
 import axios from "axios";
+import CartContext from "../contexts/CartContext";
 
 export default function Checkout() {
   const { cart } = useLocation().state;
@@ -16,6 +17,7 @@ export default function Checkout() {
   const navigate = useNavigate();
 
   const { userInfo } = useContext(UserContext);
+  const { setCartGlobal } = useContext(CartContext);
   const [adress, setAdress] = useState("");
   const [name, setName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -49,6 +51,7 @@ export default function Checkout() {
     try {
       await axios.post(`${API_URL}/order`, body, config);
       deleteLocal(userInfo.email);
+      setCartGlobal([]);
       navigate("/orderOverview", {
         state: {
           adress,
