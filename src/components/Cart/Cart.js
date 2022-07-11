@@ -52,7 +52,7 @@ export default function Cart() {
   function finishOrder() {
     const cart = {
       cartTotal,
-      cartGlobal,
+      cartItems: cartGlobal,
     };
 
     navigate("/checkout", { state: { cart } });

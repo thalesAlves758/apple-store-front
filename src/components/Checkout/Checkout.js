@@ -33,7 +33,7 @@ export default function Checkout() {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.token || ""}`,
       },
     };
 
