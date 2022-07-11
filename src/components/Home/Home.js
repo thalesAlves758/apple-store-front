@@ -11,9 +11,11 @@ import Loader from "../layout/Loader";
 export default function Home() {
   const { setProductList, showedProducts, setShowedProducts } =
     useContext(ProductsContext);
-  const [cart, setCart] = useState(getLocal("cart") || []);
   const { userInfo, setUserInfo } = useContext(UserContext);
   const navigate = useNavigate();
+
+  const initialCart = userInfo ? getLocal(userInfo.email) || [] : [];
+  const [cart, setCart] = useState(initialCart);
 
   useEffect(() => {
     const API_URL = process.env.REACT_APP_API_URL;
@@ -40,7 +42,7 @@ export default function Home() {
       const newCart = [...cart, { name, price, image, _id: id }];
 
       setCart(newCart);
-      setLocal("cart", newCart);
+      setLocal(userInfo.email, newCart);
       setUserInfo({ ...userInfo, cartLenght: newCart.length });
     }
   }

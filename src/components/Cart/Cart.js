@@ -14,7 +14,7 @@ export default function Cart() {
 
   const navigate = useNavigate();
 
-  const initialCartItems = getLocal("cart") || [];
+  const initialCartItems = userInfo ? getLocal(userInfo.email) || [] : [];
 
   const [cartTotal, setCartTotal] = useState(0);
   const [cartItems, setCartItems] = useState(initialCartItems);
@@ -34,7 +34,7 @@ export default function Cart() {
     );
 
     setCartItems(newCartItems);
-    setLocal("cart", newCartItems);
+    setLocal(userInfo.email, newCartItems);
     setUserInfo({ ...userInfo, cartLenght: userInfo.cartLenght - 1 });
   }
 

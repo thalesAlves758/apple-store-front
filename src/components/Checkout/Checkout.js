@@ -48,7 +48,7 @@ export default function Checkout() {
 
     try {
       await axios.post(`${API_URL}/order`, body, config);
-      deleteLocal("cart");
+      deleteLocal(userInfo.email);
       navigate("/orderOverview", {
         state: {
           adress,
