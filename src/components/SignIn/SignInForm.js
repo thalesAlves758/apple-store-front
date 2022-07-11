@@ -35,7 +35,7 @@ export default function SignInForm() {
     axios
       .post(`${API_URL}/sign-in`, body)
       .then(({ data }) => {
-        setUserInfo({ ...data, email: body.email });
+        setUserInfo(data);
         setLoading(false);
         navigate("/");
       })
