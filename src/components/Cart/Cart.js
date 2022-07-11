@@ -35,10 +35,7 @@ export default function Cart() {
       (_, currentIndex) => currentIndex !== index
     );
 
-    // setCartItems(newCartItems);
     setLocal(userInfo.email, newCartItems);
-    // setUserInfo({ ...userInfo, cartLenght: userInfo.cartLenght - 1 });
-    // setLocal(`${userInfo.email}`, newCartItems);
     setCartGlobal(newCartItems);
   }
 

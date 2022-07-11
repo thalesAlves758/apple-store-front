@@ -1,7 +1,7 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { getLocal, setLocal } from "../utils/localStorageFunctions";
+import { setLocal } from "../utils/localStorageFunctions";
 import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import ProductsContext from "../contexts/ProductsContext";
