@@ -1,35 +1,26 @@
-import { useState, useContext, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../assets/img/logo.png";
-import ProductsContext from "../contexts/ProductsContext";
+import normalizeText from "../utils/normalizeText";
 
 export default function Header() {
+  const navigate = useNavigate();
+
   const location = useLocation().pathname;
   const render =
     location !== "/sign-up" && location !== "/sign-in" ? true : false;
 
-  const { productList, setShowedProducts } = useContext(ProductsContext);
+  const [searchParams] = useSearchParams();
 
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState(
+    searchParams.get("search") || ""
+  );
 
-  function getNormalizedText(text) {
-    return text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
+  function navigateToHome() {
+    navigate(searchText === "" ? "/" : `/?search=${normalizeText(searchText)}`);
   }
-
-  useEffect(() => {
-    const products = productList.filter((product) => {
-      return getNormalizedText(product.name).includes(
-        getNormalizedText(searchText)
-      );
-    });
-
-    setShowedProducts(products);
-  }, [searchText]); //eslint-disable-line
-
+  
   function genHeader() {
     if (render) {
       return (
@@ -40,8 +31,11 @@ export default function Header() {
               placeholder="Pesquisar"
               type="search"
               value={searchText}
+              onKeyUp={(event) => event.key === "Enter" && navigateToHome()}
             />
-            <ion-icon name="search-outline"></ion-icon>
+            <SearchButton onClick={() => navigateToHome()}>
+              <ion-icon name="search-outline"></ion-icon>
+            </SearchButton>
             <Logo src={logo} />
           </SearchBar>
         </Container>
@@ -70,13 +64,20 @@ const SearchBar = styled.div`
   width: 90%;
   height: 40px;
   position: relative;
+`;
 
-  ion-icon {
-    position: absolute;
-    font-size: 24px;
-    left: 10px;
-    top: 8px;
-    font-weight: bold;
+const SearchButton = styled.button`
+  position: absolute;
+  font-size: 24px;
+  right: 12%;
+  height: 100%;
+  width: 40px;
+  border: none;
+  background-color: transparent;
+  font-weight: bold;
+
+  :hover {
+    cursor: pointer;
   }
 `;
 
@@ -88,7 +89,7 @@ const Input = styled.input`
   border-radius: 3px;
   text-align: left;
   outline: none;
-  padding-left: 40px;
+  padding-left: 15px;
   font-size: 16px;
 `;
 
