@@ -32,7 +32,7 @@ export default function Home() {
       }
     }
     fetchData();
-  }, []);
+  }, []); /* eslint-disable-line */
 
   function addToCart(name, price, image, id) {
     if (!userInfo) {
