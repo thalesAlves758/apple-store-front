@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { setLocal } from "../utils/localStorageFunctions";
@@ -18,6 +18,8 @@ export default function Home() {
   const { cartGlobal, setCartGlobal } = useContext(CartContext);
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
   const [searchParams] = useSearchParams();
   const searchedText = searchParams.get("search");
 
@@ -33,6 +35,8 @@ export default function Home() {
     if (productList.length === 0) {
       const API_URL = process.env.REACT_APP_API_URL;
 
+      setLoading(true);
+
       async function fetchData() {
         try {
           const { data } = await axios.get(`${API_URL}/products`);
@@ -42,6 +46,8 @@ export default function Home() {
           if (error.response) {
             console.log(error.response.data);
           }
+        } finally {
+          setLoading(false);
         }
       }
       fetchData();
@@ -65,33 +71,36 @@ export default function Home() {
   }
 
   function genProductList() {
-    if (productList.length > 0) {
-      return (
-        <Container>
-          <List>
-            {showedProducts.map((product, index) => (
-              <Product
-                key={index}
-                name={product.name}
-                price={product.price}
-                image={product.image}
-                id={product._id}
-                addToCart={addToCart}
-              />
-            ))}
-          </List>
-        </Container>
-      );
-    }
-
-    return <Loader />;
+    return (
+      <Container>
+        <List>
+          {showedProducts.map((product, index) => (
+            <Product
+              key={index}
+              name={product.name}
+              price={product.price}
+              image={product.image}
+              id={product._id}
+              addToCart={addToCart}
+            />
+          ))}
+        </List>
+      </Container>
+    );
   }
+
   return (
     <>
-      <RenderIf isTrue={showedProducts.length > 0}>{genProductList()}</RenderIf>
+      <RenderIf isTrue={!loading && showedProducts.length > 0}>
+        {genProductList()}
+      </RenderIf>
 
-      <RenderIf isTrue={showedProducts.length === 0}>
+      <RenderIf isTrue={!loading && showedProducts.length === 0}>
         <NoProductsMessage>Nenhum produto encontrado</NoProductsMessage>
+      </RenderIf>
+
+      <RenderIf isTrue={loading}>
+        <Loader />
       </RenderIf>
     </>
   );
