@@ -10,7 +10,7 @@ import Loader from "../layout/Loader";
 export default function Home() {
   const [productList, setProductList] = useState([]);
   const [cart, setCart] = useState(getLocal("cart") || []);
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, setUserInfo } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,12 +33,13 @@ export default function Home() {
     if (!userInfo) {
       alert("Você precisa estar conectado para adicionar itens ao carrinho!");
       navigate("/sign-in");
+    } else {
+      const newCart = [...cart, { name, price, image, _id: id }];
+
+      setCart(newCart);
+      setLocal("cart", newCart);
+      setUserInfo({ ...userInfo, cartLenght: newCart.length });
     }
-
-    const newCart = [...cart, { name, price, image, _id: id }];
-
-    setCart(newCart);
-    setLocal("cart", newCart);
   }
 
   function genProductList() {

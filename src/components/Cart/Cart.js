@@ -10,7 +10,7 @@ import CartItem from "./CartItem";
 import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, setUserInfo } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -35,6 +35,7 @@ export default function Cart() {
 
     setCartItems(newCartItems);
     setLocal("cart", newCartItems);
+    setUserInfo({ ...userInfo, cartLenght: userInfo.cartLenght - 1 });
   }
 
   function renderCartItems() {
