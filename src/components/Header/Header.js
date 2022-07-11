@@ -20,7 +20,7 @@ export default function Header() {
   function navigateToHome() {
     navigate(searchText === "" ? "/" : `/?search=${normalizeText(searchText)}`);
   }
-
+  
   function genHeader() {
     if (render) {
       return (

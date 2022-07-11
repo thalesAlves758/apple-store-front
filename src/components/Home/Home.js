@@ -1,10 +1,11 @@
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { getLocal, setLocal } from "../utils/localStorageFunctions";
+import { setLocal } from "../utils/localStorageFunctions";
 import UserContext from "../contexts/UserContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductsContext from "../contexts/ProductsContext";
+import CartContext from "../contexts/CartContext";
 import toBrl from "../utils/toBrl";
 import Loader from "../layout/Loader";
 import normalizeText from "../utils/normalizeText";
@@ -13,8 +14,8 @@ import RenderIf from "../utils/RenderIf";
 export default function Home() {
   const { productList, setProductList, showedProducts, setShowedProducts } =
     useContext(ProductsContext);
-  const [cart, setCart] = useState(getLocal("cart") || []);
   const { userInfo, setUserInfo } = useContext(UserContext);
+  const { cartGlobal, setCartGlobal } = useContext(CartContext);
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
@@ -55,11 +56,11 @@ export default function Home() {
       alert("Você precisa estar conectado para adicionar itens ao carrinho!");
       navigate("/sign-in");
     } else {
-      const newCart = [...cart, { name, price, image, _id: id }];
+      const newCart = [...cartGlobal, { name, price, image, _id: id }];
 
-      setCart(newCart);
-      setLocal("cart", newCart);
+      setLocal(userInfo.email, newCart);
       setUserInfo({ ...userInfo, cartLenght: newCart.length });
+      setCartGlobal(newCart);
     }
   }
 

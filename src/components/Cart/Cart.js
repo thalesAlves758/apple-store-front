@@ -2,44 +2,42 @@ import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 
 import UserContext from "../contexts/UserContext";
+import CartContext from "../contexts/CartContext";
 import Button from "../layout/Button";
 import toBrl from "../utils/toBrl";
 import RenderIf from "../utils/RenderIf";
-import { getLocal, setLocal } from "../utils/localStorageFunctions";
+import { setLocal } from "../utils/localStorageFunctions";
 import CartItem from "./CartItem";
 import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
-  const { userInfo, setUserInfo } = useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
+  const { cartGlobal, setCartGlobal } = useContext(CartContext);
 
   const navigate = useNavigate();
 
-  const initialCartItems = getLocal("cart") || [];
-
   const [cartTotal, setCartTotal] = useState(0);
-  const [cartItems, setCartItems] = useState(initialCartItems);
 
   function getCartTotal() {
     const REDUCE_INITIAL_VALUE = 0;
 
-    return cartItems.reduce(
+    return cartGlobal.reduce(
       (accumulator, current) => accumulator + current.price,
       REDUCE_INITIAL_VALUE
     );
   }
 
   function removeItem(index) {
-    const newCartItems = cartItems.filter(
+    const newCartItems = cartGlobal.filter(
       (_, currentIndex) => currentIndex !== index
     );
 
-    setCartItems(newCartItems);
-    setLocal("cart", newCartItems);
-    setUserInfo({ ...userInfo, cartLenght: userInfo.cartLenght - 1 });
+    setLocal(userInfo.email, newCartItems);
+    setCartGlobal(newCartItems);
   }
 
   function renderCartItems() {
-    return cartItems.map((cartItem, index) => (
+    return cartGlobal.map((cartItem, index) => (
       <CartItem
         key={index}
         index={index}
@@ -54,7 +52,7 @@ export default function Cart() {
   function finishOrder() {
     const cart = {
       cartTotal,
-      cartItems,
+      cartGlobal,
     };
 
     navigate("/checkout", { state: { cart } });
@@ -69,17 +67,17 @@ export default function Cart() {
 
   useEffect(() => {
     setCartTotal(getCartTotal());
-  }, [cartItems]); // eslint-disable-line
+  }, [cartGlobal]); // eslint-disable-line
 
   return (
     <Container>
-      <RenderIf isTrue={cartItems.length === 0}>
+      <RenderIf isTrue={cartGlobal.length === 0}>
         <NoItemsMessage>
           Não há nenhum item no carrinho no momento!
         </NoItemsMessage>
       </RenderIf>
 
-      <RenderIf isTrue={cartItems.length > 0}>
+      <RenderIf isTrue={cartGlobal.length > 0}>
         <PageTitle>
           Seu carrinho
           <ion-icon name="cart"></ion-icon>
@@ -90,7 +88,7 @@ export default function Cart() {
         <CartInfo>
           <CartTotal>Subtotal: {toBrl(cartTotal)}</CartTotal>
           <FinishOrderButton onClick={finishOrder}>
-            Finalizar pedido {`(${cartItems.length} item(ns))`}
+            Finalizar pedido {`(${cartGlobal.length} item(ns))`}
           </FinishOrderButton>
         </CartInfo>
       </RenderIf>
