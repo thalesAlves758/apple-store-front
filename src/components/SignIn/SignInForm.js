@@ -38,8 +38,8 @@ export default function SignInForm() {
     axios
       .post(`${API_URL}/sign-in`, body)
       .then(({ data }) => {
-        setUserInfo({ ...data, email: body.email });
-        setCartGlobal(getLocal(body.email) || []);
+        setUserInfo(data);
+        setCartGlobal(getLocal(data.email) || []);
         setLoading(false);
         navigate("/");
       })
