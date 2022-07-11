@@ -6,14 +6,17 @@ import Button from "../layout/Button";
 import axios from "axios";
 
 import UserContext from "../contexts/UserContext";
+import CartContext from "../contexts/CartContext";
 
 import httpStatus from "../../utils/httpStatus";
 
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
+import { getLocal } from "../utils/localStorageFunctions";
 
 export default function SignInForm() {
   const { setUserInfo } = useContext(UserContext);
+  const { setCartGlobal } = useContext(CartContext);
 
   const navigate = useNavigate();
 
@@ -36,6 +39,7 @@ export default function SignInForm() {
       .post(`${API_URL}/sign-in`, body)
       .then(({ data }) => {
         setUserInfo({ ...data, email: body.email });
+        setCartGlobal(getLocal(body.email) || []);
         setLoading(false);
         navigate("/");
       })
